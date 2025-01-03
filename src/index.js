@@ -17,10 +17,3 @@ app.use(taskRouter);
 app.listen(port, () => {
   console.log("Server is up");
 });
-
-const myFunction = async () => {
-  const password = "12345";
-  const hpass = await bcrypt.hash(password, 8);
-  console.log(hpass, password);
-};
-myFunction();

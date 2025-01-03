@@ -13,7 +13,7 @@ router.post("/users", async (req, res) => {
     res.status(201).send(user); // Send the created user as a response
   } catch (error) {
     console.error("Error saving user:", error);
-    res.status(400).send(error); // Send error response if there's an issue
+    res.status(400).send(error); // Send error response if there is an issue
   }
 });
 
@@ -43,6 +43,18 @@ router.get("/users/:id", async (req, res) => {
   }
 });
 
+//login USer
+router.post("/users/login", async (req, res) => {
+  try {
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+    res.send(user);
+  } catch (error) {
+    res.status(404).send();
+  }
+});
 //deleting  user
 router.delete("/users/:id", async (req, res) => {
   _id = req.params.id;
