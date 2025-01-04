@@ -8,9 +8,10 @@ const router = new express.Router();
 router.post("/users", async (req, res) => {
   const user = new User(req.body); // Use req.body to access the incoming request data
   try {
-    await user.save(); // Save the user to the database
+    const token = await user.genAuth();
+    // Save the user to the database
     console.log("User saved successfully:", user);
-    res.status(201).send(user); // Send the created user as a response
+    res.status(201).send({ user, token }); // Send the created user as a response
   } catch (error) {
     console.error("Error saving user:", error);
     res.status(400).send(error); // Send error response if there is an issue
@@ -50,11 +51,16 @@ router.post("/users/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
-    res.send(user);
+    console.log(user);
+    const token = await user.genAuth();
+    res.send({ user, token });
+    console.log("LOGGEED IN");
   } catch (error) {
-    res.status(404).send();
+    console.log(error);
+    res.status(400).send({ error: error.message });
   }
 });
+
 //deleting  user
 router.delete("/users/:id", async (req, res) => {
   _id = req.params.id;

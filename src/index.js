@@ -4,7 +4,7 @@ const User = require("./models/user");
 const Task = require("./models/tasks");
 const userRouter = require("./routers/userrouter");
 const bcrypt = require("bcrypt");
-
+const jwt = require("jsonwebtoken");
 const taskRouter = require("./routers/taskrouter");
 const port = 3000;
 const app = express();
@@ -17,3 +17,14 @@ app.use(taskRouter);
 app.listen(port, () => {
   console.log("Server is up");
 });
+
+const myfunction = async () => {
+  const token = jwt.sign({ _id: "abcd" }, "ienvysdn", {
+    expiresIn: "10 second",
+  });
+  console.log("token:", token);
+  const data = jwt.verify(token, "ienvysdn");
+  console.log(data);
+};
+
+myfunction();
