@@ -12,7 +12,7 @@ router.post("/users", async (req, res) => {
     const token = await user.genAuth();
     // Save the user to the database
     console.log("User saved successfully:", user);
-    res.status(201).send({ user }); // Send the created user as a response
+    res.status(201).send({ user, token }); // Send the created user as a response
   } catch (error) {
     console.error("Error saving user:", error);
     res.status(400).send(error); // Send error response if there is an issue
