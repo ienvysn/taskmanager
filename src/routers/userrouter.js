@@ -3,6 +3,7 @@
 const express = require("express");
 const User = require("../models/user");
 const router = new express.Router();
+const auth = require("../middleware/auth");
 
 //POST a new user in database
 router.post("/users", async (req, res) => {
@@ -11,21 +12,16 @@ router.post("/users", async (req, res) => {
     const token = await user.genAuth();
     // Save the user to the database
     console.log("User saved successfully:", user);
-    res.status(201).send({ user, token }); // Send the created user as a response
+    res.status(201).send({ user }); // Send the created user as a response
   } catch (error) {
     console.error("Error saving user:", error);
     res.status(400).send(error); // Send error response if there is an issue
   }
 });
 
-// GET all user
-router.get("/users", async (req, res) => {
-  try {
-    user = await User.find();
-    res.send(user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
+// GET user
+router.get("/users/me", auth, async (req, res) => {
+  res.send(req.user); //req.user comes from Auth
 });
 
 //GET user by ID

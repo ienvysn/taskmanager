@@ -9,22 +9,24 @@ const taskRouter = require("./routers/taskrouter");
 const port = 3000;
 const app = express();
 
-app.use(express.json()); // parse incomming json to object
+//EXPRESS MIDDLEWARE
 
+// app.use((req, res, next) => {
+//   if (req.method == "GET") {
+//     res.send("GET REQ ae disabkle");
+//   } else {
+//     next(); //next is a default function (middleware)
+//   }
+// });
+
+// app.use((req, res, next) => {
+//   res.status(503).send("Uder maintaince");
+// });
+
+app.use(express.json()); // parse incomming json to object
 //made seperate router for user and task
 app.use(userRouter);
 app.use(taskRouter);
 app.listen(port, () => {
   console.log("Server is up");
 });
-
-const myfunction = async () => {
-  const token = jwt.sign({ _id: "abcd" }, "ienvysdn", {
-    expiresIn: "10 second",
-  });
-  console.log("token:", token);
-  const data = jwt.verify(token, "ienvysdn");
-  console.log(data);
-};
-
-myfunction();
