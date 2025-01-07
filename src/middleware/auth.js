@@ -11,7 +11,6 @@ const auth = async (req, res, next) => {
       _id: decoded._id,
       "tokens.token": token,
     });
-    console.log("object");
     if (!user) {
       throw new error();
     }
@@ -31,5 +30,6 @@ const auth = async (req, res, next) => {
 // Errors, such as a missing or invalid token, result in a 401 Unauthorized response. While this middleware currently doesn't attach the user object to the request, it could be modified to do so for easier access in route handlers.
 //  This middleware is a critical component for securing routes in the application.
 // This code is then sent to userrouter as a parameter in the router.
+//req.token = token and req.user = user is used to gain ascess to the token and user in any router where "auth" is called
 
 module.exports = auth;

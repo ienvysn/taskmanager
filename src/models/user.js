@@ -54,12 +54,14 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.findByCredentials = async (email, password) => {
+  // console.log(email, password);
   const user = await User.findOne({ email });
   if (!user) {
     throw new Error("Login in failed");
   }
 
-  const isCorrectPass = await bcrypt.compare(password, user.password);
+  const isCorrectPass = bcrypt.compare(password, user.password);
+  // console.log(isCorrectPass);
 
   if (!isCorrectPass) {
     throw new Error("Login in failed");
@@ -82,6 +84,13 @@ userSchema.methods.genAuth = async function () {
   this.tokens = this.tokens.concat({ token }); //saves the token to User Schema
   await this.save();
   return token;
+};
+
+userSchema.methods.hidePrivateData = function () {
+  const userObj = this.toObject();
+  delete userObj.password;
+  delete userObj.tokens;
+  return userObj;
 };
 
 const User = mongoose.model("User", userSchema);
