@@ -25,7 +25,7 @@ router.get("/users/me", auth, async (req, res) => {
 });
 
 //GET user by ID
-router.get("/users/:id", async (req, res) => {
+router.get("/users/:id", auth, async (req, res) => {
   _id = req.params.id;
 
   try {
@@ -36,7 +36,7 @@ router.get("/users/:id", async (req, res) => {
     }
     res.send(user);
   } catch {
-    res.status(500).send(error);
+    res.status(500).send({ error: "Failed to get user" });
   }
 });
 
@@ -57,8 +57,20 @@ router.post("/users/login", async (req, res) => {
   }
 });
 
+router.post("/users/logout", auth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.token;
+    });
+    await req.user.save();
+    res.send();
+  } catch (error) {
+    res.status(500).send();
+  }
+});
+
 //deleting  user
-router.delete("/users/:id", async (req, res) => {
+router.delete("/users/:id", auth, async (req, res) => {
   _id = req.params.id;
   try {
     user = await User.findByIdAndDelete(_id);
@@ -67,12 +79,12 @@ router.delete("/users/:id", async (req, res) => {
     }
     res.send(user);
   } catch (error) {
-    res.send(error);
+    res.status(400).send({ error: "Failed to update user" });
   }
 });
 
 //update user
-router.patch("/users/:id", async (req, res) => {
+router.patch("/users/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "email", "age", "password"];
   const isValidOptions = updates.every((update) =>
@@ -103,3 +115,15 @@ router.patch("/users/:id", async (req, res) => {
 });
 
 module.exports = router;
+
+// EXPLAINATION
+// First we require all the necessary things like expres and the userDB. The we set a new router which is linked with "index.js"
+//
+// POST, GET and DELETE are the router used and they are used for different things.
+//
+// In the route, we have "auth" which authenticates the user. if the route has "auth" then the user cannot do anything withouot being authenticated
+//
+//
+//
+//
+//
