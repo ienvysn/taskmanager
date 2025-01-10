@@ -12,13 +12,7 @@ router.post("/users/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
-
-    console.log(`basic user:${user}`);
     const token = await user.genAuth();
-
-    console.log(`token:${token}`);
-    console.log(` user with token:${user}`);
-
     res.status(200).send({ user: user.hidePrivateData(), token });
     console.log("LOGGEED IN");
   } catch (error) {
@@ -61,7 +55,6 @@ router.post("/users/logout", auth, async (req, res) => {
 router.delete("/users/me", auth, async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.user._id);
-
     res.send("User deleted");
     console.log("test");
   } catch (error) {

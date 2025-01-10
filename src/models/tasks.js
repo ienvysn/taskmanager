@@ -13,6 +13,11 @@ const Task = mongoose.model("Task", {
     default: false,
     trim: true,
   },
+  userID: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
 });
 
 module.exports = Task;
