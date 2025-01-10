@@ -21,14 +21,25 @@ router.post("/tasks", auth, async (req, res) => {
   }
 });
 //GET all tasks
+// /task?Completed=true
+// /task?limit=3&skip=3
 router.get("/tasks", auth, async (req, res) => {
+  let match = {};
+
+  const limit = parseInt(req.query.limit) || 3; //how many data to show
+  const skip = parseInt(req.query.skip) || 3; //to go to another page
+
+  if (req.query.Completed !== undefined) {
+    // Convert the query parameter to a boolean
+    match.Completed = req.query.Completed === "true"; // This will return true if "true", false if "false"
+  }
   try {
-    const task = await Task.find({ userID: req.user._id });
-    console.log(task);
-    res.send(task);
+    const tasks = await Task.find({ userID: req.user._id, ...match })
+      .limit(limit)
+      .skip(skip);
+    res.send(tasks);
   } catch (e) {
-    console.log(e);
-    res.statusCode().send;
+    res.status(500).send(e);
   }
 });
 
