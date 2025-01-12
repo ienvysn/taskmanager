@@ -1,6 +1,7 @@
 //REFACTORING SO THAT all the route for /user is in one place
 
 const express = require("express");
+const multer = require("multer");
 const User = require("../models/user");
 const router = new express.Router();
 const auth = require("../middleware/auth");
@@ -86,6 +87,24 @@ router.patch("/users/me", auth, async (req, res) => {
     console.error(error); // Log the error for debugging
     res.status(400).send({ error: "Failed to update user" });
   }
+});
+
+//To upload files
+const avatar = multer({
+  dest: "images",
+  limits: {
+    fileSize: 1000000, //size in bytes
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)&/)) {
+      //regular expression
+      return cb(new error("please upload a photo"));
+    }
+    cb(undefined, true);
+  },
+});
+router.post("/users/me/avatar", avatar.single("avatar"), (req, res) => {
+  res.send();
 });
 
 module.exports = router;

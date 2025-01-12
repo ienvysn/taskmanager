@@ -9,20 +9,6 @@ const taskRouter = require("./routers/taskrouter");
 const port = 3000;
 const app = express();
 
-//EXPRESS MIDDLEWARE
-
-// app.use((req, res, next) => {
-//   if (req.method == "GET") {
-//     res.send("GET REQ ae disabkle");
-//   } else {
-//     next(); //next is a default function (middleware)
-//   }
-// });
-
-// app.use((req, res, next) => {
-//   res.status(503).send("Uder maintaince");
-// });
-
 app.use(express.json()); // parse incomming json to object
 //made seperate router for user and task
 app.use(userRouter);
