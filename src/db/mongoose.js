@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 // Connect to MongoDB
 async function main() {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api");
+    await mongoose.connect(process.env.DB);
     console.log("Connected to MongoDB!");
   } catch (error) {
     console.error("Database connection error:", error);

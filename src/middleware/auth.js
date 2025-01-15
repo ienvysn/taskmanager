@@ -5,7 +5,7 @@ const auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
 
-    const decoded = jwt.verify(token, "ienvysnn"); // safe key that we used to makw the hash password
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // safe key that we used to makw the hash password
 
     const user = await User.findOne({
       _id: decoded._id,

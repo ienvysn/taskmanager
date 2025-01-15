@@ -91,19 +91,33 @@ router.patch("/users/me", auth, async (req, res) => {
 
 //To upload files
 const avatar = multer({
-  dest: "images",
+  // dest: "images", /creates a new dir and saves it
+
   limits: {
     fileSize: 1000000, //size in bytes
   },
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)&/)) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
       //regular expression
       return cb(new error("please upload a photo"));
     }
     cb(undefined, true);
   },
 });
-router.post("/users/me/avatar", avatar.single("avatar"), (req, res) => {
+router.post(
+  "/users/me/avatar",
+  auth,
+  avatar.single("avatar"),
+  async (req, res) => {
+    req.user.avatar = req.file.buffer;
+    await req.user.save();
+    res.send();
+  }
+);
+
+router.delete("user/me/avatar", auth, async (req, res) => {
+  req.user.avatar = undefined;
+  await req.user.save();
   res.send();
 });
 

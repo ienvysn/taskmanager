@@ -52,6 +52,9 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+    avatar: {
+      type: Buffer,
+    },
   },
   {
     timestamps: true,
@@ -89,7 +92,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.genAuth = async function () {
-  const token = jwt.sign({ _id: this._id.toString() }, "ienvysnn", {
+  const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
   this.tokens = this.tokens.concat({ token }); //saves the token to User Schema
